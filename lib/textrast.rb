@@ -18,9 +18,8 @@ module TextRasterizer
             @pointsize = font_size
             @by_line = by_line
             @font = font
-            @font_size = font_size
             background_color ||= "white"
-            foreground_color ||= "black"
+            foreground_color ||= '#000000'
             @background_color = background_color
             @foreground_color = foreground_color
         end
@@ -62,9 +61,8 @@ module TextRasterizer
             @margin = margin
             @text_width = image_width - (2 * margin)
             @font = font
+            font_size ||= 12
             @font_size = font_size
-            puts background_color
-            puts foreground_color
             @background_color = background_color
             @foreground_color = foreground_color
         end
