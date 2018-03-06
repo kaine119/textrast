@@ -9,26 +9,32 @@ module TextRasterizer
         # @param image_width [FixNum] how wide/tall the image itself is, in pixels
         # @param margin [FixNum] text margin from top and left, in pixels
         # @param font_size [FixNum] size of text in frame, in points
-        # @param font_family [String] font family to use
-        def initialize(text, by_line, image_width, margin, font_family, font_size)
+        # @param font [String] font family to use
+        def initialize(text, by_line, image_width: 500, margin: 50, font: "Arial", font_size: 30, background_color: "white", foreground_color: "black")
             @text = text
             @image_width = image_width
             @margin = margin
             @text_width = image_width - (2 * margin) # How wide the text rectangle will be 
-            puts @text_width
             @pointsize = font_size
             @by_line = by_line
-            @font_family = font_family
+            @font = font
             @font_size = font_size
+            @background_color = background_color
+            @foreground_color = foreground_color
         end
 
         # Generate the frame and save it at +path+ specified.
         # @param path [String] path at which to save (and *overwrite*) the generated frame. 
         # @return [nil]
         def generate_file(path)
-            image = Magick::Image.new @image_width, @image_width
+            bg = @background_color
+            fg = @foreground_color
+            image = Magick::Image.new @image_width, @image_width do
+                self.background_color = bg
+            end
             text = Magick::Draw.new
-            text.font_family = @font_family
+            text.font = @font
+            text.fill = @foreground_color
             text.pointsize = @pointsize
             # body
             text.annotate(image, @text_width, 0.8 * @text_width, @margin, @margin, @text) { self.gravity = Magick::NorthWestGravity }
@@ -46,15 +52,19 @@ module TextRasterizer
         # @param end_byline [String] the byline at the very end of the series
         # @param image_width [FixNum] the width of the image, in pixels
         # @param margin [FixNum] text margin from left, in pixels
-        def initialize(body, middle_byline, end_byline, image_width, margin, font_family, font_size)
+        def initialize(body, middle_byline, end_byline, image_width: 500, margin: 50, font: 'Arial', font_size: 12, background_color: 'white', foreground_color: 'black')
             @body = body
             @middle_byline = middle_byline
             @end_byline = end_byline
             @image_width = image_width
             @margin = margin
             @text_width = image_width - (2 * margin)
-            @font_family = font_family
+            @font = font
             @font_size = font_size
+            puts background_color
+            puts foreground_color
+            @background_color = background_color
+            @foreground_color = foreground_color
         end
 
         # Returns true if some text can fit within an image's width.
@@ -67,7 +77,7 @@ module TextRasterizer
             drawing.gravity = Magick::WestGravity
             drawing.pointsize = pointsize
             drawing.fill = "#ffffff"
-            drawing.font_family = @font_family
+            drawing.font = @font
             drawing.annotate(tmp_image, (width - margin), (width - margin), margin, margin, text)
             metrics = drawing.get_multiline_type_metrics(tmp_image, text)
             if metrics.width >= width
@@ -105,13 +115,19 @@ module TextRasterizer
                         end
                         current_chunk += word
                     elsif needs_splitting_along == :height
-                        chunks << TextFrame.new(current_chunk, @middle_byline, @image_width, @margin, @font_family, @font_size)
+                        chunks << TextFrame.new(current_chunk, @middle_byline, 
+                                                image_width: @image_width, margin: @margin, 
+                                                font: @font, font_size: @font_size, 
+                                                background_color: @background_color, foreground_color: @foreground_color)
                         current_chunk = word
                     end
                     i += 1
                 end
             end
-            chunks << TextFrame.new(current_chunk, @end_byline, @image_width, @margin, @font_family, @font_size)
+            chunks << TextFrame.new(current_chunk, @end_byline, 
+                        image_width: @image_width, margin: @margin, 
+                        font: @font, font_size: @font_size, 
+                        background_color: @background_color, foreground_color: @foreground_color)
             return chunks
         end
     end
