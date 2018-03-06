@@ -1,7 +1,7 @@
 require 'rmagick'
 
 # Paginate text and generates a series of _square images_ from said text.
-module InstagramPages
+module TextRasterizer
     # This class represents one image (frame) of text.
     class TextFrame
         # @param text [String] main body text the frame holds
