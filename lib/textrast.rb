@@ -19,6 +19,8 @@ module TextRasterizer
             @by_line = by_line
             @font = font
             @font_size = font_size
+            background_color ||= "white"
+            foreground_color ||= "black"
             @background_color = background_color
             @foreground_color = foreground_color
         end
