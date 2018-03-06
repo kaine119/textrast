@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'textrast'
-  s.version     = '0.2.0'
+  s.version     = '0.2.1'
   s.date        = '2018-02-23'
   s.summary     = "Text Rasteriser"
   s.description = "Rasterises text in square images and saves it to a local file."
