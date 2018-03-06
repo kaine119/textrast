@@ -8,4 +8,5 @@ Gem::Specification.new do |s|
   s.email       = 'muikaien1@gmail.com'
   s.files       = ["lib/textrast.rb"]
   s.license       = 'MIT'
+  s.add_runtime_dependency "rmagick", "~> 2.0.0"
 end
